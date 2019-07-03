@@ -2,18 +2,6 @@
 import sys
 import os
 
-###################### Input from R #####################################
-
-parameter = sys.argv[1:]
-speciesList = str(parameter[0]).split(",")
-speciesSet = set(speciesList)
-speciesTaxId = str(parameter[1]).split(",")
-for i in range(0,len(speciesTaxId)):
-    speciesTaxId[i] = int(speciesTaxId[i])
-omaGroupId = parameter[2]
-path = parameter[3]
-mode = parameter[4]
-
 
 #print(speciesList, speciesTaxId, omaGroupId, path, mode)
 
@@ -46,8 +34,8 @@ def openFileToAppend(location):
     file = open(location, "a+")
     return file
 
-def gettingOmaGroupProteins():
-    fileGroups = openFileToRead("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-groups.txt")
+def gettingOmaGroupProteins(omaGroupId):
+    fileGroups = openFileToRead("data/oma-groups.txt")
     allGroups = fileGroups.readlines()
     fileGroups.close()
 
@@ -66,7 +54,7 @@ def createFolder(path, folder_name):
     except FileExistsError:
         return "Folder exists"
 
-def getSpeciesDic():
+def getSpeciesDic(speciesList, speciesTaxId):
     speciesDic = {}
     for i in range(0, len(speciesList)):
         speciesDic[speciesList[i]] = speciesTaxId[i]
@@ -77,11 +65,11 @@ def makeOneSeqId(speciesDic, species):
     header = species + "@" + str(speciesDic[species]) + "@" + "2"
     return(header)
 
-def createHeader(protId, speciesHeader):
+def createHeader(protId, speciesHeader, omaGroupId):
     header = str(omaGroupId) + "|" + speciesHeader + "|" + protId[0:10]
     return(header)
 
-def gettingSequences(speciesCode, protId, SeqDic, speciesDic):
+def gettingSequences(speciesCode, protId, SeqDic, speciesDic, path, omaGroupId):
 
     fileName = makeOneSeqId(speciesDic, speciesCode)
     fileSpecies = openFileToRead(path + "/genome_dir/" + fileName + "/" + fileName + ".fa")
@@ -89,32 +77,59 @@ def gettingSequences(speciesCode, protId, SeqDic, speciesDic):
     fileSpecies.close()
     lineNr = int(protId[6:11])
     #header = dataset[lineNr * 2 - 2]
-    header = createHeader(protId, fileName)
+    header = createHeader(protId, fileName, omaGroupId)
     seq = dataset[lineNr * 2 - 1]
 
     SeqDic[header] = seq
 
     return SeqDic
 
-def createFiles(Dic):
+def createFiles(Dic, path, omaGroupId):
     newFile = openFileToWrite(path + "/core_orthologs/" + str(omaGroupId) + "/" + str(omaGroupId) + ".fa")
     for key in Dic:
         newFile.write(">" + key + "\n")
         newFile.write(Dic[key])
 
+def makeTmpFiles(data, name):
+    """creates tmp files of the computed OmaGroups and selected species"""
+    createFolder(os.getcwd(), "tmp")
+    tmp = openFileToWrite("tmp/" + name + ".txt")
+    for i in data:
+        tmp.write(i + "\n")
+
+    tmp.close()
+
 def main():
-    speciesDic = getSpeciesDic()
-    proteinIds = gettingOmaGroupProteins()
+    ###################### Input from R #####################################
+
+    parameter = sys.argv[1:]
+    speciesList = str(parameter[0]).split(",")
+    speciesSet = set(speciesList)
+    speciesTaxId = str(parameter[1]).split(",")
+    for i in range(0, len(speciesTaxId)):
+        speciesTaxId[i] = int(speciesTaxId[i])
+    omaGroupId = parameter[2]
+    path = parameter[3]
+
+
+
+    speciesDic = getSpeciesDic(speciesList, speciesTaxId)
+    proteinIds = gettingOmaGroupProteins(omaGroupId)
     SequenceDic = {}
 
+
     createFolder(path, "core_orthologs")
+    createFolder(path + "/core_orthologs", omaGroupId)
 
     for i in proteinIds:
         speciesCode = i[0:5]
         if speciesCode in speciesSet:
-            SequenceDic = gettingSequences(speciesCode, i, SequenceDic, speciesDic)
+            SequenceDic = gettingSequences(speciesCode, i, SequenceDic, speciesDic, path, omaGroupId)
 
-    createFiles(SequenceDic)
+
+    createFiles(SequenceDic, path, omaGroupId)
+    makeTmpFiles(list(omaGroupId), "commonOmaGroups")
+    makeTmpFiles(speciesList,"species")
 
     return ("Oma Group " + omaGroupId + "has been saved in your core_orthologs folder")
 

@@ -6,7 +6,7 @@ schema = client.get("https://omabrowser.org/api/docs")
 action = ["version", "list"]
 result = client.action(schema, action)["oma_version"]
 
-file = open("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-groups.txt", "r")
+file = open("../data/oma-groups.txt", "r")
 
 line = file.readline()
 

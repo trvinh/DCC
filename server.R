@@ -1,5 +1,4 @@
 library(data.table)
-#source("OmaGroups.R")
 
 ######## setup shiny server ###############
 
@@ -10,7 +9,7 @@ shinyServer <- function(input, output, session) {
   readOmaSpec <- reactive({
     #loads the oma-species file from OmaDb and creates an data.frame
     # location has to be changed!
-    taxTable <- fread("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-species.txt", 
+    taxTable <- fread("data/oma-species.txt", 
                       header = TRUE,
                       skip = 3,
                       sep = "\t")
@@ -19,7 +18,7 @@ shinyServer <- function(input, output, session) {
   
   readOmaGroup <- reactive({
     #loads the transformed oma-groups-tmp.txt file as an data.frame, returns the table
-    groupTable <- fread("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-groups-tmp.txt")
+    groupTable <- fread("data/oma-groups-tmp.txt")
     return(groupTable)
   })
   
@@ -188,6 +187,12 @@ shinyServer <- function(input, output, session) {
     }
   )
   
+  output$update <- renderUI({
+      if (input$inputTyp != "OmaId"){
+          checkboxInput("update", label = "update Mode")
+      }
+      
+  })
   output$nrMissingSpecies <- renderUI({
     # a user input will be created which is addicted to the number of choosen species
     # this choosen number stands for the number of species which can be missed in an oma group
@@ -306,7 +311,7 @@ shinyServer <- function(input, output, session) {
   
   getOmaGroup <- function(inputOmaCode, inputTaxId, path){
     fileGettingOmaGroup <- "python3 scripts/gettingOmaGroup.py"
-    y <- cat(system(paste(fileGettingOmaGroup, inputOmaCode, inputTaxId, input$omaGroupId, path, input$update)))
+    y <- cat(system(paste(fileGettingOmaGroup, inputOmaCode, inputTaxId, input$omaGroupId, path)))
   }
   
   disableButton <- observeEvent(input$shinyalert,{

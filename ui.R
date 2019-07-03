@@ -28,7 +28,7 @@ shinyUI(
         uiOutput("nrMissingSpecies"),
         
         # creates a input whether the update mode or the normal mode should be used
-        checkboxInput("update", label = "update Mode"),
+        uiOutput("update"),
         
         # creates an input to choose which MSA tool should be used
         checkboxGroupInput("MSA", label= "MSA tool", choices = c("MAFFT", "MUSCLE"), selected = "MAFFT"),

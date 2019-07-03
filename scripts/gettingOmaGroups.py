@@ -2,17 +2,7 @@
 import sys
 import os
 
-###################### Input from R #####################################
 
-parameter = sys.argv[1:]
-speciesList = str(parameter[0]).split(",")
-speciesSet = set(speciesList)
-speciesTaxId = str(parameter[1]).split(",")
-for i in range(0,len(speciesTaxId)):
-    speciesTaxId[i] = int(speciesTaxId[i])
-nrMissingSpecies = parameter[2]
-path = parameter[3]
-mode = parameter[4]
 
 
 ########################### Tests ########################################
@@ -45,7 +35,7 @@ def openFileToAppend(location):
     return file
 
 def gettingOmaGroups(speciesSet, nr):
-    omaGroups = openFileToRead("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-groups.txt")
+    omaGroups = openFileToRead("data/oma-groups.txt")
     commonOmaGroups = []
     speciesDic = {}
     for i in omaGroups:
@@ -106,7 +96,7 @@ def gettingSeqeunces(dataset, speciesDic, speciesCode):
                 pass
     return speciesSequences
 
-def createFiles(speciesDic, sequenceDic, speciesNameOneSeq, OmaGroupSet):
+def createFiles(speciesDic, sequenceDic, speciesNameOneSeq, OmaGroupSet, mode, path):
     """creates the core_ortholog folder and the saves the OmaGroups as multi_fasta files"""
     #input:
     #speciesDic: Dic {<speciesId>: {<proteinID>: <OmaGroup Id>}}
@@ -197,14 +187,29 @@ def createFolder(path, folder_name):
 
 def makeTmpFiles(data, name):
     """creates tmp files of the computed OmaGroups and selected species"""
-    createFolder(path, "tmp")
-    tmp = openFileToWrite(path + "/tmp/" + name + ".txt")
+    createFolder(os.getcwd(), "tmp")
+    tmp = openFileToWrite("tmp/" + name + ".txt")
     for i in data:
         tmp.write(i + "\n")
 
     tmp.close()
 
 def main():
+    ###################### Input from R #####################################
+
+    parameter = sys.argv[1:]
+    speciesList = str(parameter[0]).split(",")
+    speciesSet = set(speciesList)
+    speciesTaxId = str(parameter[1]).split(",")
+    for i in range(0, len(speciesTaxId)):
+        speciesTaxId[i] = int(speciesTaxId[i])
+    nrMissingSpecies = parameter[2]
+    path = parameter[3]
+    mode = parameter[4]
+
+    ##########################################################################
+
+
     commonOmaGroups, speciesDic = gettingOmaGroups(speciesSet, nrMissingSpecies)
 
     createFolder(path, "core_orthologs")
@@ -220,7 +225,7 @@ def main():
 
         speciesDataset = openFileToRead(path + "/genome_dir/" + filename + "/" + filename + ".fa")
         sequenceDic = gettingSeqeunces(speciesDataset, speciesDic, key)
-        OmaGroupSet = createFiles(speciesDic, sequenceDic, filename,OmaGroupSet)
+        OmaGroupSet = createFiles(speciesDic, sequenceDic, filename,OmaGroupSet, mode, path)
         speciesNames.append(filename)
 
     makeTmpFiles(commonOmaGroups, "commonOmaGroups")

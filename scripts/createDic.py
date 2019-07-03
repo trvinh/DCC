@@ -3,16 +3,13 @@ from Bio import SeqIO
 import time
 import json
 
-path = "/Users/hannahmuelbaier/Desktop/Bachelorarbeit"
-allProteins = open("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-seqs.fa", "r")
-newFileSpecies = open("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-seqs-dic.fa", "w")
-omaGroups = open("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-groups.txt", "r")
-newFileOmaGroup = open("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-groups-tmp.txt", "w")
+#path = "/Users/hannahmuelbaier/Desktop/Bachelorarbeit"
+
+
 def createDicSpecies(proteins, file):
     start = time.time()
     sequenceDic = {}
     code = str(proteins.readline()[2:7])
-    #print(code)
     startline = 0
     lineNr = 0
 
@@ -35,8 +32,6 @@ def createDicSpecies(proteins, file):
 def createDicOmaGroup(omaGroups, file):
     start = time.time()
 
-    print("test")
-
     groupDic = {}
 
     for i in omaGroups:
@@ -53,7 +48,6 @@ def createDicOmaGroup(omaGroups, file):
 
             groupDic[groupId] = tuple(speciesSet)
 
-    #json.dump(groupDic, file)
 
     for key in groupDic:
         speciesStr = str(groupDic[key]).replace("(", "")
@@ -66,10 +60,20 @@ def createDicOmaGroup(omaGroups, file):
     print('{:5.3f}s'.format(ende - start), end='  ')
 
 
+def main():
+    allProteins = open("../data/oma-seqs.fa", "r")
+    newFileSpecies = open("../data/oma-seqs-dic.fa", "w")
+    omaGroups = open("../data/oma-groups.txt", "r")
+    newFileOmaGroup = open("../data/oma-groups-tmp.txt", "w")
 
-createDicSpecies(allProteins, newFileSpecies)
-createDicOmaGroup(omaGroups, newFileOmaGroup)
-newFileSpecies.close()
+    createDicSpecies(allProteins, newFileSpecies)
+    createDicOmaGroup(omaGroups, newFileOmaGroup)
 
+    newFileSpecies.close()
+    newFileOmaGroup.close()
+    allProteins.close()
+    omaGroups.close()
 
+if __name__ == '__main__':
+    main()
 

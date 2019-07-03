@@ -7,15 +7,6 @@ from pyfaidx import Fasta
 import time
 import json
 
-########################### Input from R ############################
-
-parameter = sys.argv[1:]
-
-speciesCode = str(parameter[0]).split(",")
-speciesTaxId = str(parameter[1]).split(",")
-path = parameter[2]
-
-
 
 ########################### Testing ###################################
 #path = "/Users/hannahmuelbaier/Desktop/Bachelorarbeit"
@@ -52,18 +43,18 @@ def createFolder(path, folder_name):
     except FileExistsError:
         return "Folder exists"
 
-def makeTmpFile(species):
-    createFolder(path, "tmp")
-    try:
-        tmp = openFileToAppend(path + "/tmp/species.txt")
-    except FileNotFoundError:
-        tmp = openFileToWrite(path + "/tmp/species.txt")
+# def makeTmpFile(species, path):
+#     createFolder(path, "tmp")
+#     try:
+#         tmp = openFileToAppend(path + "/tmp/species.txt")
+#     except FileNotFoundError:
+#         tmp = openFileToWrite(path + "/tmp/species.txt")
+#
+#     tmp.write(species + "\n")
 
-    tmp.write(species + "\n")
-
-def getDataset(speciesCode, speciesTaxId):
+def getDataset(speciesCode, speciesTaxId, path):
     start = time.time()
-    allProteins = openFileToRead("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-seqs.fa")
+    allProteins = openFileToRead("data/oma-seqs.fa")
     name = makeOneSeqSpeciesName(speciesCode, speciesTaxId)
 
     createFolder(path, "genome_dir")
@@ -92,7 +83,7 @@ def getDataset(speciesCode, speciesTaxId):
     ende = time.time()
     print('{:5.3f}s'.format(ende-start), end='  ')
 
-def getDataset2(speciesCode, speciesTaxId):
+def getDataset2(speciesCode, speciesTaxId, path):
     createFolder(path, "genome_dir")
     start = time.time()
     name = makeOneSeqSpeciesName(speciesCode, speciesTaxId)
@@ -108,13 +99,13 @@ def getDataset2(speciesCode, speciesTaxId):
     ende = time.time()
     print('{:5.3f}s'.format(ende - start), end='  ')
 
-def getDataset3(speciesCode, speciesTaxId):
+def getDataset3(speciesCode, speciesTaxId, path):
     createFolder(path, "genome_dir")
     start = time.time()
 
     toDo = []
 
-    with open(path + "/oma-seqs-dic.fa") as f:
+    with open("data/oma-seqs-dic.fa") as f:
         sequence_dic = json.load(f)
 
     for i in range(0,len(speciesCode)):
@@ -130,7 +121,7 @@ def getDataset3(speciesCode, speciesTaxId):
 
 
     if toDo != []:
-        allProteins = openFileToRead("/Users/hannahmuelbaier/Desktop/Bachelorarbeit/oma-seqs.fa")
+        allProteins = openFileToRead("data/oma-seqs.fa")
         allProteinsLines = allProteins.readlines()
         allProteins.close()
 
@@ -164,8 +155,22 @@ def getDataset3(speciesCode, speciesTaxId):
     print('{:5.3f}s'.format(ende - start), end='  ')
 
 
+def main():
+    ########################### Input from R ############################
 
-getDataset3(speciesCode, speciesTaxId)
+    parameter = sys.argv[1:]
+
+    speciesCode = str(parameter[0]).split(",")
+    speciesTaxId = str(parameter[1]).split(",")
+    path = parameter[2]
+
+    ########################## Function call ##############################
+    print(os.getcwd())
+    getDataset3(speciesCode, speciesTaxId, path)
+
+
+if __name__ == '__main__':
+    main()
 
 ############################# Notes ###############################
 # Doppelte Funktionen in den scripten: openFile Funktionen, createFolder

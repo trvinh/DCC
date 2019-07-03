@@ -29,7 +29,7 @@ def gettingId(line):
     return id
 
 def main():
-    groupsFile = open(path + "/tmp/commonOmaGroups.txt", "r")
+    groupsFile = open("tmp/commonOmaGroups.txt", "r")
     pool = mp.Pool(mp.cpu_count())
 
     results = [pool.apply(makingHmm, args=(gettingId(line), path)) for line in groupsFile]
