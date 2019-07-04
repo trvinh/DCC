@@ -213,6 +213,8 @@ def main():
     commonOmaGroups, speciesDic = gettingOmaGroups(speciesSet, nrMissingSpecies)
 
     createFolder(path, "core_orthologs")
+    createFolder(path, "blast_dir")
+    createFolder(path, "genome_dir")
     speciesNames = []
     OmaGroupSet = set()
 

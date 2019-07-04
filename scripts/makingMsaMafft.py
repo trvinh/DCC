@@ -2,8 +2,7 @@ import sys
 import os
 import multiprocessing as mp
 
-parameter = sys.argv[1:]
-path = parameter[0]
+
 
 def makingMSA(id, path):
     output = path + "/core_orthologs/" + id + "/" + id  + ".aln"
@@ -21,6 +20,10 @@ def gettingId(line):
     return id
 
 def main():
+    ########################## Input ##########################################
+    parameter = sys.argv[1:]
+    path = parameter[0]
+    ###########################################################################
     groupsFile = open("tmp/commonOmaGroups.txt", "r")
     pool = mp.Pool(mp.cpu_count())
 

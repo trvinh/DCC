@@ -69,7 +69,7 @@ def createHeader(protId, speciesHeader, omaGroupId):
     header = str(omaGroupId) + "|" + speciesHeader + "|" + protId[0:10]
     return(header)
 
-def gettingSequences(speciesCode, protId, SeqDic, speciesDic, path, omaGroupId):
+def gettingSequences(speciesCode, protId, SeqDic, speciesDic, path, omaGroupId, nameList):
 
     fileName = makeOneSeqId(speciesDic, speciesCode)
     fileSpecies = openFileToRead(path + "/genome_dir/" + fileName + "/" + fileName + ".fa")
@@ -81,8 +81,9 @@ def gettingSequences(speciesCode, protId, SeqDic, speciesDic, path, omaGroupId):
     seq = dataset[lineNr * 2 - 1]
 
     SeqDic[header] = seq
+    nameList.append(fileName)
 
-    return SeqDic
+    return nameList, SeqDic
 
 def createFiles(Dic, path, omaGroupId):
     newFile = openFileToWrite(path + "/core_orthologs/" + str(omaGroupId) + "/" + str(omaGroupId) + ".fa")
@@ -110,6 +111,7 @@ def main():
         speciesTaxId[i] = int(speciesTaxId[i])
     omaGroupId = parameter[2]
     path = parameter[3]
+    tmpListSpecies = []
 
 
 
@@ -119,17 +121,19 @@ def main():
 
 
     createFolder(path, "core_orthologs")
+    createFolder(path, "genome_dir")
+    createFolder(path, "blast_dir")
     createFolder(path + "/core_orthologs", omaGroupId)
 
     for i in proteinIds:
         speciesCode = i[0:5]
         if speciesCode in speciesSet:
-            SequenceDic = gettingSequences(speciesCode, i, SequenceDic, speciesDic, path, omaGroupId)
+            tmpListSpecies, SequenceDic = gettingSequences(speciesCode, i, SequenceDic, speciesDic, path, omaGroupId, tmpListSpecies)
 
 
     createFiles(SequenceDic, path, omaGroupId)
     makeTmpFiles(list(omaGroupId), "commonOmaGroups")
-    makeTmpFiles(speciesList,"species")
+    makeTmpFiles(tmpListSpecies,"species")
 
     return ("Oma Group " + omaGroupId + "has been saved in your core_orthologs folder")
 

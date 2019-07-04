@@ -12,17 +12,12 @@ path = parameter[0]
 
 
 def makingHmm(id, path):
-    try:
-        os.mkdir(path + "/core_orthologs/" + id + "/hmm_dir")
-    except FileExistsError:
-        pass
-
     output = path + "/core_orthologs/" + id + "/hmm_dir/" + id + ".hmm"
     #print(output)
 
     input = path + "/core_orthologs/" + id + "/" + id + ".aln"
     #print(input)
-    os.system("hmmbuild -o " + path + "/tmp/hmmbuild.txt --amino " + output + " " + input)
+    os.system("hmmbuild -o tmp/hmmbuild.txt --amino " + output + " " + input)
 
 def gettingId(line):
     id = line.replace("\n", "")
