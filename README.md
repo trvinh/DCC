@@ -4,9 +4,9 @@ DCC: dynamic compilation of core gene sets
 1: Download the OMA files from https://omabrowser.org/oma/current/
 Required files:
 
-OMA groups in Text format
-Protein sequences in Fasta format
-Species information Text format
+- OMA groups in Text format
+- Protein sequences in Fasta format
+- Species information Text format
 
 2: run /scripts/createDic.py
 
@@ -14,16 +14,16 @@ Species information Text format
 
 Python:
 
-os
-sys
-json
-time
-multiprocessing
-coreapi
+- os
+- sys
+- json
+- time
+- multiprocessing
+- coreapi
 
 R:
-shiny
-shinyjs
-shinyalert
-data.table
-shinyDirectoryInput
+- shiny
+- shinyjs
+- shinyalert
+- data.table
+- shinyDirectoryInput
