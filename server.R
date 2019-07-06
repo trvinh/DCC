@@ -194,6 +194,7 @@ shinyServer <- function(input, output, session) {
       }
       
   })
+  
   output$nrMissingSpecies <- renderUI({
     # a user input will be created which is addicted to the number of choosen species
     # this choosen number stands for the number of species which can be missed in an oma group
@@ -213,7 +214,6 @@ shinyServer <- function(input, output, session) {
           )
         }else{
           taxaInFile <- read.table(inFile$datapath, header = FALSE)
-          print(nrow(taxaInFile))
           selectInput(inputId = "nrMissingSpecies",
                       label = "How many species can be missed in an OmaGroup",
                       choices = seq(0,(nrow(taxaInFile)-1))
@@ -376,15 +376,15 @@ shinyServer <- function(input, output, session) {
       fileMSA <- "python scripts/makingMsaMuscle.py"
     }
     updateProgress(detail = y)
-    system(paste(fileMSA, path), intern = TRUE)
+    #system(paste(fileMSA, path), intern = TRUE)
     
     fileHmm <- "python scripts/makingHmms.py"
     updateProgress(detail = "Computing hMMs with HMMER")
-    system(paste(fileHmm, path), intern = TRUE)
+    #system(paste(fileHmm, path), intern = TRUE)
     
     fileBlastDb <- "python scripts/makingBlastdb.py"
     updateProgress(detail = "Computing Blastdbs")
-    system(paste(fileBlastDb, path), inter = TRUE)
+    #system(paste(fileBlastDb, path), inter = TRUE)
     
     output$end <- renderText(paste("The calculation is finished. Your output is saved under: ", path, y))
     

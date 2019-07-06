@@ -1,6 +1,7 @@
 ####################### Imports #########################################
 import sys
 import os
+import time
 
 
 
@@ -196,7 +197,7 @@ def makeTmpFiles(data, name):
 
 def main():
     ###################### Input from R #####################################
-
+    start = time.time()
     parameter = sys.argv[1:]
     speciesList = str(parameter[0]).split(",")
     speciesSet = set(speciesList)
@@ -234,7 +235,9 @@ def main():
     makeTmpFiles(speciesNames, "species")
 
     print("Finished searching. " + str(len(commonOmaGroups)) + " common OmaGroups were found and saved. Computing MSAs with MAFFT")
+    ende = time.time()
 
+    print('{:5.3f}s'.format(ende - start), end='  ')
 
 
 

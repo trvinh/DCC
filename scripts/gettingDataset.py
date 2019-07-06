@@ -54,31 +54,40 @@ def createFolder(path, folder_name):
 
 def getDataset(speciesCode, speciesTaxId, path):
     start = time.time()
+    print(speciesCode)
+    print(speciesTaxId)
     allProteins = openFileToRead("data/oma-seqs.fa")
-    name = makeOneSeqSpeciesName(speciesCode, speciesTaxId)
+    for j in range(0, len(speciesCode)):
 
-    createFolder(path, "genome_dir")
-    #makeTmpFile(name)
+        name = makeOneSeqSpeciesName(speciesCode[j], speciesTaxId[j])
+        print(name)
 
-    try:
-        os.mkdir(path + "/genome_dir/" + name)
-    except FileExistsError:
-        print("File exists already for species " + speciesCode)
-        return("FileExistsError")
+        createFolder(path, "genome_dir")
+        #makeTmpFile(name)
 
-    newFile = openFileToWrite(path + "/genome_dir/" + name + "/" + name + ".fa")
-    check = False
-    for i in SeqIO.FastaIO.SimpleFastaParser(allProteins):
-        codeAllProteins = (i[0])[1:6]
-        if codeAllProteins == speciesCode:
-            check = True
-            newFile.write(">" + i[0][1:] + "\n")
-            newFile.write(i[1] + "\n")
-        elif check == True:
-            newFile.close()
-            print("saved " + name)
-            break
-    newFile.close()
+        try:
+            os.mkdir(path + "/genome_dir/" + name)
+        except FileExistsError:
+            print("File exists already for species " + speciesCode[j])
+            return("FileExistsError")
+
+        newFile = openFileToWrite(path + "/genome_dir/" + name + "/" + name + ".fa")
+        check = False
+        #print(speciesCode[j])
+        for i in SeqIO.FastaIO.SimpleFastaParser(allProteins):
+            codeAllProteins = (i[0])[1:6]
+            if codeAllProteins == speciesCode[j]:
+                print(codeAllProteins)
+                print(speciesCode[j])
+                check = True
+                newFile.write(">" + i[0][1:] + "\n")
+                newFile.write(i[1] + "\n")
+            elif check == True:
+                newFile.close()
+                print("saved " + name)
+                check = False
+                break
+        newFile.close()
     allProteins.close()
     ende = time.time()
     print('{:5.3f}s'.format(ende-start), end='  ')
@@ -165,8 +174,8 @@ def main():
     path = parameter[2]
 
     ########################## Function call ##############################
-    print(os.getcwd())
     getDataset3(speciesCode, speciesTaxId, path)
+    #getDataset(speciesCode,speciesTaxId,path)
 
 
 if __name__ == '__main__':

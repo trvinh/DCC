@@ -16,6 +16,10 @@ def makingHmm(id, path):
     #print(output)
 
     input = path + "/core_orthologs/" + id + "/" + id + ".aln"
+    try:
+        os.mkdir(path + "/core_orthologs/" + id + "/hmm_dir")
+    except FileExistsError:
+        pass
     #print(input)
     os.system("hmmbuild -o tmp/hmmbuild.txt --amino " + output + " " + input)
 
