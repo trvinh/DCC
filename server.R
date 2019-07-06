@@ -376,15 +376,15 @@ shinyServer <- function(input, output, session) {
       fileMSA <- "python scripts/makingMsaMuscle.py"
     }
     updateProgress(detail = y)
-    #system(paste(fileMSA, path), intern = TRUE)
+    system(paste(fileMSA, path), intern = TRUE)
     
     fileHmm <- "python scripts/makingHmms.py"
     updateProgress(detail = "Computing hMMs with HMMER")
-    #system(paste(fileHmm, path), intern = TRUE)
+    system(paste(fileHmm, path), intern = TRUE)
     
     fileBlastDb <- "python scripts/makingBlastdb.py"
     updateProgress(detail = "Computing Blastdbs")
-    #system(paste(fileBlastDb, path), inter = TRUE)
+    system(paste(fileBlastDb, path), inter = TRUE)
     
     output$end <- renderText(paste("The calculation is finished. Your output is saved under: ", path, y))
     
