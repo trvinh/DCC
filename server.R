@@ -59,16 +59,14 @@ shinyServer <- function(input, output, session) {
         inputId = "species", 
         label = "Select up to 10 species",
         multiple = TRUE,
-        choices = omaSpecTable$TaxonID,
-        selected = omaSpecTable$TaxonID[1]
+        choices = omaSpecTable$TaxonID
       )
     } else if (input$inputTyp == "speciesName") {
       selectInput(
         inputId = "species", 
         label = "Select up to 10 species",
         multiple = TRUE,
-        choices = omaSpecTable$ScientificName,
-        selected = omaSpecTable$ScientificName[1]
+        choices = omaSpecTable$ScientificName
       )} else if (input$inputTyp == "inputFile"){
         fileInput("taxFile", "Choose File")
       } else if (input$inputTyp == "OmaId"){
@@ -80,8 +78,7 @@ shinyServer <- function(input, output, session) {
           multiple = TRUE,
           #choices = omaGroupTable$V1,
           #selected = omaGroupTable$V1[1]
-          choices = c(1:2000),
-          selected = "1"
+          choices = c(1:2000)
         )
       }
     
