@@ -164,7 +164,7 @@ shinyServer <- function(input, output, session) {
   output$version <-  renderPrint({
     # this function starts a python program which returns the current version of the used oma files
     # the script returns if the version we use is up to date
-    y <- cat(system(paste("python3 /Users/hannahmuelbaier/Desktop/Bachelorarbeit/Python/FeedingHaMStROneSeq/getVersion.py"), intern = TRUE))
+    y <- cat(system(paste("python scripts/getVersion.py"), intern = TRUE))
     
   })
   
@@ -297,7 +297,7 @@ shinyServer <- function(input, output, session) {
   
   getDatasets <- function(inputOmaCode, inputTaxId, path){
     # this function runs the python script which collects the datasets of the chossen species
-    fileGettingDataset <- "python3 scripts/gettingDataset.py"
+    fileGettingDataset <- "python scripts/gettingDataset.py"
     system(paste(fileGettingDataset, inputOmaCode,inputTaxId, path))
     return(0)
     
@@ -305,13 +305,13 @@ shinyServer <- function(input, output, session) {
   
   getCommonOmaGroups <- function(inputOmaCode, inputTaxId, path){
     # this function runs the phyton script which collects the common Oma Groups of the choosen species
-    fileGettingOmaGroups <- "python3 scripts/gettingOmaGroups.py"
+    fileGettingOmaGroups <- "python scripts/gettingOmaGroups.py"
     y <- cat(system(paste(fileGettingOmaGroups, inputOmaCode, inputTaxId, input$nrMissingSpecies, path, input$update), inter = TRUE))
     return(y)
   }
   
   getOmaGroup <- function(inputOmaCode, inputTaxId, path){
-    fileGettingOmaGroup <- "python3 scripts/gettingOmaGroup.py"
+    fileGettingOmaGroup <- "python scripts/gettingOmaGroup.py"
     y <- cat(system(paste(fileGettingOmaGroup, inputOmaCode, inputTaxId, input$omaGroupId, path)))
   }
   
@@ -376,15 +376,15 @@ shinyServer <- function(input, output, session) {
       fileMSA <- "python scripts/makingMsaMuscle.py"
     }
     updateProgress(detail = y)
-    system(paste(fileMSA, path), intern = TRUE)
+    #system(paste(fileMSA, path), intern = TRUE)
     
     fileHmm <- "python scripts/makingHmms.py"
     updateProgress(detail = "Computing hMMs with HMMER")
-    system(paste(fileHmm, path), intern = TRUE)
+    #system(paste(fileHmm, path), intern = TRUE)
     
     fileBlastDb <- "python scripts/makingBlastdb.py"
     updateProgress(detail = "Computing Blastdbs")
-    system(paste(fileBlastDb, path), inter = TRUE)
+    #system(paste(fileBlastDb, path), inter = TRUE)
     
     output$end <- renderText(paste("The calculation is finished. Your output is saved under: ", path, y))
     

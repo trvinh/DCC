@@ -56,11 +56,11 @@ def getDataset(speciesCode, speciesTaxId, path):
     start = time.time()
     print(speciesCode)
     print(speciesTaxId)
-    allProteins = openFileToRead("data/oma-seqs.fa")
+    allProteins = SeqIO.parse("data/oma-seqs.fa", "fasta")
     for j in range(0, len(speciesCode)):
 
         name = makeOneSeqSpeciesName(speciesCode[j], speciesTaxId[j])
-        print(name)
+        #print(name)
 
         createFolder(path, "genome_dir")
         #makeTmpFile(name)
@@ -72,25 +72,28 @@ def getDataset(speciesCode, speciesTaxId, path):
             return("FileExistsError")
 
         newFile = openFileToWrite(path + "/genome_dir/" + name + "/" + name + ".fa")
-        check = False
+
         #print(speciesCode[j])
-        for i in SeqIO.FastaIO.SimpleFastaParser(allProteins):
-            codeAllProteins = (i[0])[1:6]
-            if codeAllProteins == speciesCode[j]:
-                print(codeAllProteins)
-                print(speciesCode[j])
-                check = True
-                newFile.write(">" + i[0][1:] + "\n")
-                newFile.write(i[1] + "\n")
-            elif check == True:
-                newFile.close()
-                print("saved " + name)
-                check = False
-                break
+        getSequence(allProteins, speciesCode[j], newFile, name)
         newFile.close()
     allProteins.close()
     ende = time.time()
     print('{:5.3f}s'.format(ende-start), end='  ')
+
+
+def getSequence(allProteins, speciesCode, newFile, name):
+    check = False
+    for record in allProteins:
+        codeAllProteins = record.id[0:5]
+        if codeAllProteins == speciesCode:
+            check = True
+            newFile.write(">" + str(record.id) + "\n")
+            newFile.write(str(record.seq) + "\n")
+        elif check == True:
+            newFile.close()
+            print("saved " + name)
+            break
+
 
 def getDataset2(speciesCode, speciesTaxId, path):
     createFolder(path, "genome_dir")
@@ -174,8 +177,8 @@ def main():
     path = parameter[2]
 
     ########################## Function call ##############################
-    getDataset3(speciesCode, speciesTaxId, path)
-    #getDataset(speciesCode,speciesTaxId,path)
+    #getDataset3(speciesCode, speciesTaxId, path)
+    getDataset(speciesCode,speciesTaxId,path)
 
 
 if __name__ == '__main__':
