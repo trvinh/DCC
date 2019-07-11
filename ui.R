@@ -1,9 +1,11 @@
+#################### Librarys #############################
 library(shiny)
 library(shinyjs)
 #devtools::install_github('wleepang/shiny-directory-input')
 library(shinyDirectoryInput)
 library(shinyalert)
 
+###################### server function ###################
 shinyUI(
   fluidPage(
     #Title
