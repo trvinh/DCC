@@ -163,7 +163,7 @@ shinyServer <- function(input, output, session) {
   output$version <-  renderPrint({
     # this function starts a python program which returns the current version of the used oma files
     # the script returns if the version we use is up to date
-    y <- cat(system(paste("python3 scripts/getVersion.py"), intern = TRUE))
+    y <- cat(system(paste("python scripts/getVersion.py"), intern = TRUE))
     
   })
   
