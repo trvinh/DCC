@@ -36,7 +36,7 @@ shinyUI(
         radioButtons("MSA", label= "MSA tool", choices = c("MAFFT", "MUSCLE"), selected = "MAFFT"),
         
         #directory input takes the path to HaMStR where the output will be saved
-        directoryInput('directory', label = 'Please choose the location of your HaMStR', value = '~'),
+        directoryInput('directory', label = 'Please choose the location you want to save your output', value = '~'),
         # make it possible to disable or anable the action button
         useShinyjs(),
         useShinyalert(),
