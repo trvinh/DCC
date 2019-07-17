@@ -177,8 +177,8 @@ def main():
     path = parameter[2]
 
     ########################## Function call ##############################
-    #getDataset3(speciesCode, speciesTaxId, path)
-    getDataset(speciesCode,speciesTaxId,path)
+    getDataset3(speciesCode, speciesTaxId, path)
+    #getDataset(speciesCode,speciesTaxId,path)
 
 
 if __name__ == '__main__':
